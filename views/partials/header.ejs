@@ -1,0 +1,52 @@
+<!-- 產生一個導覽列(Navigation Bar) -->
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
+    <div class="container-fluid">
+        <!-- 導覽列標題 -->
+        <a class="navbar-brand" href="/">主動式機房散熱與能耗管理</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbarCollapse"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- 導覽列內容 -->
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/monitor">機房溫度監控及廢熱回收監控</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/error">歷史警示溫度查詢資料庫</a>
+                </li>
+            </ul>
+		</div>
+	</div>
+</nav>
+
+<!-- 裝扮導覽列顏色與超連結效果之CSS -->
+<style>
+    .navbar {
+        background-color: rgb(163, 161, 160) !important;
+    }
+    
+    .navbar .navbar-brand {
+        color: rgb(255, 255, 255) !important;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    
+    .navbar li a {
+        color: #ffffff !important;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    
+    .navbar-nav li a:hover,
+    .navbar-nav li.active a {
+        color: #f4511e !important;
+        background-color: #fff !important;
+    }
+    
+    .navbar-default .navbar-toggle {
+        border-color: transparent;
+        color: #fff !important;
+    }
+</style>

@@ -1,0 +1,130 @@
+<!DOCTYPE html> <!-- 表示本頁面是由 HTML5 編成-->
+<html>
+<head>
+    <!-- 設定網頁之標題 -->
+	<title><%= title %></title>
+	<!-- 包含使用Bootstrap及jQuery所需的頁頭檔 -->
+	<%- include('./partials/head.ejs'); %>
+
+    <!-- 以下這個匿名函數是jquery的ready事件處理方法，當網頁Ready好的就會自動執行 -->
+    <!-- 因此，可以把要註冊的所有事件處理函數及需要先執行的命令放在這個函數內 -->
+    <script>
+        $(function() {
+            // 幫id為btn1的按鈕標籤註冊了點擊事件的處理方法
+            // 在jquery及nodejs通常會使用匿名函數作為事件處理方法，比較簡潔
+
+            // 幫id為btn1的按鈕標籤註冊了點擊事件的處理方法
+            $('#btn1').click(() => {
+                let sets = $('#sets').val();
+                if (sets == '') {
+                    alert('請輸入組數');
+                    return;
+                }
+                $.post(
+                    '/lottery/' + $('input[type="radio"]:checked').val() + '/' + sets, (data) => {
+                        // 呼叫getformattedResultString函數產生所有樂透號碼之格式化字串
+                        let formattedResultString = getformattedResultString(data.result);
+                        // 將格式化字串顯示在id為result的標籤內
+                        document.getElementById("result").innerHTML = formattedResultString;
+                });
+            });
+        })
+
+        // 產生所有樂透號碼之格式化字串函數，輸入參數為樂透號碼2D陣列lotteryNumber2DArray
+        function getformattedResultString(lotteryNumber2DArray)
+        {
+            // 宣告變數
+            let str = "";  // 用於儲存lotteryNumber2DArray中所有樂透號碼的格式化字串
+            let type;      // 樂透種類  0:大樂透  1:威力彩 
+            let sets = lotteryNumber2DArray.length; // 號碼組數=樂透號碼結果之2D陣列第1維度之長度
+            if (lotteryNumber2DArray[0][6] == 0) // 如果樂透陣列index6的值為0，則種類為大樂透
+            {
+                type = 0;
+            }
+            else // 否則為威力彩
+            {
+                type = 1;
+            }
+            if (type == 0) // 假如是大樂透，設定大樂透結果格式化字串的開頭訊息
+            {
+                str += '<b><span class="text-primary">大樂透' + sets + '組號碼:</span ></b><br/>';
+            }
+            else // 否則為威力彩，設定威力彩結果格式化字串的開頭訊息
+            {
+                // &emsp;為1個全形(中文字)的空白寬度
+                str += '<b><span class=\"text-primary\">威力彩' + sets + '組號碼:</span></b><br/>';
+                str += '<span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;第一區&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;第二區</span><br/>';
+            }
+            
+            // for (variable of iterable) {statements}之使用說明：
+            // variable: 在每次迭代時從序列中接收一個值，可以是帶有 const、let 或 var 的宣告。
+            // iterable: 一個可迭代的對象，為循環運行的值序列的來源。
+            // statements: 每次迭代都要執行的單個語句或多個語句。
+            // 逐一將lotteryNumber2DArray中每一個item(一組樂透號碼整數陣列)傳入Print函數中
+            for(let item of lotteryNumber2DArray)  
+            { 
+                // 將Print函數回傳的字串加入str字串中；lotteryNumber2DArray.indexOf(item):取得item在lotteryNumber2DArray中的index
+                str += Print(item, type, lotteryNumber2DArray.indexOf(item)); 
+            }
+            return str; // 回傳所有樂透號碼的格式化字串
+        }
+        
+        // 產生單一組樂透號碼之格式化字串的函數，
+        // numberArray: 樂透號碼陣列、type:樂透種類、index: numberArray位於lotteryNumber2DArray的索引值
+        function Print(numberArray, type, index)
+        {
+            let str1 = ""; // 用於儲存單一組樂透號碼的格式化字串
+            str1 += "<span>第" + twodigits(index +1) + "組:</span>&nbsp;";
+            if (type == 0)  // 若種類為大樂透，，則執行以下程式碼
+            {
+                for (let i = 0; i < 6; i++) // 產生6顆橙色號碼徽章(badge)
+                {
+                    str1 += '<span class="badge bg-warning rounded-pill text-dark">' + twodigits(numberArray[i]) + '</span>&nbsp;';
+                }
+                str1 += '<br/>';
+            }
+            else  // 否則為威力彩，則執行以下程式碼
+            {
+                for (let i = 0; i < 6; i++) // 產生第一區6顆淺藍色號碼徽章(badge)
+                {
+                    str1 += '<span class="badge bg-info rounded-pill text-dark">' + twodigits(numberArray[i]) + '</span>&nbsp;';
+                }
+                str1 += '<span class="badge bg-danger rounded-pill">' + numberArray[6] + '</span><br/>'; // 產生第二區1顆紅色號碼徽章
+            }
+            return str1;  // 回傳單一組樂透號碼之格式化字串
+        }
+
+        //將個位數整數轉成2位數，例如:1轉成01，好讓格式對齊
+        function twodigits(value) {
+            let digit2 = Math.floor(value / 10);
+            let digit1 = value % 10;
+            return digit2.toString() + digit1.toString();
+        }
+    </script>
+</head>
+<!-- body為網頁的內容，也就是呈現使用者介面UI的地方 -->
+<body style="font-family: 標楷體;">
+<!-- 包含產生導覽列所需的標頭檔 -->
+<%- include('./partials/header.ejs'); %>
+
+<!-- 以下為操作介面UI之設計 -->
+<div class="container" style="text-align: center;">
+    <!-- 操作介面之標題 -->
+    <br/>
+    <h2><span class="badge rounded-pill bg-danger">樂透號碼產生器</span></h2>
+
+    <!-- 操作介面之內容 -->
+    <label for="lotterytype" class="text-primary"><b>選擇樂透種類：</b></label>
+    <input type="radio" name="lotterytype" value="0" checked><b><img src="/images/BigLotteryLogo.jpg" width="50"></b>
+    <input type="radio" name="lotterytype" value="1"><b><img src="/images/PowerLotteryLogo.jpg" width="60"></b> <br/>
+    <label for="sets" class="text-primary"><b>輸入組數：</b></label>
+    <input type="number" name="sets" id="sets" value="1" style="width:5em"> <br/>
+    <button id="btn1" class="btn btn-success"><b>產生號碼</b></button> <br/>
+    
+    <!--顯示結果區域，border:1px solid：幫div區域加上1p的實體邊框；margin:auto：使div區域置中 -->
+    <!-- overflow:auto：內容過長時便顯示垂直Scroll Bar，以便能捲動觀看；text-align:left：內容靠左對齊 -->
+    <div id="result" style="border:1px solid; margin: auto;width:35%;height:310px;overflow:auto;text-align:left">
+    </div>
+</div>
+</body>
+</html>

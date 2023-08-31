@@ -1,0 +1,26 @@
+<!-- !DOCTYPE html是宣告這個網頁是基於HTML5所寫的 -->
+<!DOCTYPE html>
+<html>
+<!-- head為網頁的表頭，通常將CSS、引用bootstrap、jquery等meta data，以及javascript函數放在表頭內 -->
+<head>
+    <!-- 設定網頁之標題 -->
+	<title><%= title %></title>
+	<!-- 包含使用Bootstrap及jQuery所需的頁頭檔 -->
+	<%- include('./partials/head.ejs'); %>
+
+</head>
+
+<!-- body為網頁的內容，也就是呈現使用者介面UI的地方 -->
+<body style="font-family: 標楷體;">
+<!-- 包含產生導覽列所需的標頭檔 -->
+<%- include('./partials/header.ejs'); %>
+
+<!-- 以下為操作介面UI之設計 -->
+<div  class="container text-center">
+    <!-- 操作介面之內容 -->
+    <br>
+    <h4 class="display-6"><b><span class="text text-primary">機房散熱與能耗管理監控入口網站</span></b></h4>
+</div>
+
+</body>
+</html>

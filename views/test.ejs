@@ -1,0 +1,25 @@
+<!DOCTYPE html> <!-- 表示本頁面是由 HTML5 編成-->
+<html>  
+<head>
+	<!-- 設定網頁之標題 -->
+	<title><%= title %></title>
+	<!-- 包含使用Bootstrap及jQuery所需的頁頭檔 -->
+	<%- include('./partials/head.ejs'); %>
+
+	<!-- 以下這個匿名函數是jquery的ready事件處理方法，當網頁Ready好的就會自動執行 -->
+	<!-- 因此，可以把要註冊的所有事件處理函數及需要先執行的命令放在這個函數內 -->
+	<script>
+		
+	</script>
+</head>
+<!-- body為網頁的內容，也就是呈現使用者介面UI的地方 -->
+<body style="font-family:標楷體;">
+	This is an error page.
+<%- include('./partials/header.ejs'); %>
+
+    <!-- 將 Node-RED 網頁嵌入到 EJS 中 -->
+    <iframe src="https://24h.pchome.com.tw/" width="100%" height="800px"></iframe>
+
+ 
+</body>
+</html>
